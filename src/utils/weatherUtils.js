@@ -1,5 +1,3 @@
-// utils/weatherUtils.js
-
 export const getHumidityDescription = (humidity) => {
   if (humidity < 30) return "Dry";
   if (humidity < 60) return "Normal";
