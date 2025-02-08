@@ -19,6 +19,9 @@ const ForecastCard = ({ forecastData }) => {
             <img
               src={`https://openweathermap.org/img/wn/${day.icon}@2x.png`}
               alt="weather icon"
+              style={{
+                filter: "contrast(1.5) brightness(1.1)",
+              }}
             />
 
             <p className="fs-5 fw-semibold">{day.avgTemp}°C</p>
