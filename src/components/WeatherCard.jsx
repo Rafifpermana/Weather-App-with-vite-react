@@ -1,23 +1,98 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import info from "../assets/information-line.png";
 import { getHumidityDescription } from "../utils/weatherUtils";
 import { motion } from "framer-motion";
 import moment from "moment-timezone";
+import { Modal } from "react-bootstrap";
 
 const WeatherCard = ({ weatherData }) => {
+  const [showInfo, setShowInfo] = useState(false);
+
+  const toggleInfo = () => {
+    setShowInfo(!showInfo);
+  };
+
   const getBackgroundColor = (description) => {
-    switch (description.toLowerCase()) {
-      case "stormy":
-        return "#4a4a4a";
-      case "clear":
-        return "#87ceeb";
-      case "overcast clouds":
-        return "#d3d3d3";
-      case "rain":
-        return "#4682b4";
-      default:
-        return "#f0f0f0";
-    }
+    const stormy = [
+      "thunderstorm with light rain",
+      "thunderstorm with rain",
+      "thunderstorm with heavy rain",
+      "light thunderstorm",
+      "thunderstorm",
+      "heavy thunderstorm",
+      "ragged thunderstorm",
+      "thunderstorm with light drizzle",
+      "thunderstorm with drizzle",
+      "thunderstorm with heavy drizzle",
+    ];
+
+    const rainy = [
+      "light rain",
+      "moderate rain",
+      "heavy intensity rain",
+      "very heavy rain",
+      "extreme rain",
+      "freezing rain",
+      "light intensity shower rain",
+      "shower rain",
+      "heavy intensity shower rain",
+      "ragged shower rain",
+      "light intensity drizzle",
+      "drizzle",
+      "heavy intensity drizzle",
+      "light intensity drizzle rain",
+      "drizzle rain",
+      "heavy intensity drizzle rain",
+      "shower rain and drizzle",
+      "heavy shower rain and drizzle",
+      "shower drizzle",
+    ];
+
+    const snowy = [
+      "light snow",
+      "snow",
+      "heavy snow",
+      "sleet",
+      "light shower sleet",
+      "shower sleet",
+      "light rain and snow",
+      "rain and snow",
+      "light shower snow",
+      "shower snow",
+      "heavy shower snow",
+    ];
+
+    const cloudy = [
+      "overcast clouds",
+      "broken clouds",
+      "scattered clouds",
+      "few clouds",
+    ];
+
+    const atmosphere = [
+      "mist",
+      "smoke",
+      "haze",
+      "sand/dust whirls",
+      "fog",
+      "sand",
+      "dust",
+      "volcanic ash",
+      "squalls",
+      "tornado",
+    ];
+
+    const lowerDesc = description.toLowerCase();
+
+    if (stormy.includes(lowerDesc)) return "#4a4a4a";
+    if (rainy.includes(lowerDesc)) return "#4682b4";
+    if (snowy.includes(lowerDesc)) return "#b0e0e6";
+    if (cloudy.includes(lowerDesc)) return "#d3d3d3";
+    if (atmosphere.includes(lowerDesc)) return "#696969";
+    if (lowerDesc === "clear sky") return "#87ceeb";
+
+    return "#f0f0f0";
   };
 
   const getTextColor = (temp) => {
@@ -41,12 +116,15 @@ const WeatherCard = ({ weatherData }) => {
   const currentTime = moment()
     .utcOffset(weatherData.timezone / 60)
     .format("hh:mm A");
+  const dayOfWeek = moment()
+    .utcOffset(weatherData.timezone / 60)
+    .format("dddd");
 
   return (
     <motion.div
       className="card mx-auto p-4 shadow-lg"
       style={{
-        maxWidth: "450px",
+        maxWidth: "420px",
         backgroundColor: backgroundColor,
         borderRadius: "15px",
         color: textColor,
@@ -56,20 +134,30 @@ const WeatherCard = ({ weatherData }) => {
       transition={{ duration: 0.5 }}
     >
       <div className="card-body position-relative">
+        {/* Bagian header yang menampilkan nama lokasi dan waktu */}
         <div className="d-flex justify-content-between mb-3">
           <h2 className="card-title fw-semibold fs-4 fst-italic">
             {weatherData.name}
           </h2>
           <p className="card-text fw-bold fs-5">{currentTime}</p>
         </div>
-        <div className="d-flex justify-content-center align-items-center mb-3">
+
+        {/* Menampilkan hari dalam seminggu */}
+        <div className="text-center mb-3">
+          <p className="fs-3 fst-italic">{dayOfWeek}</p>
+        </div>
+
+        {/* Menampilkan suhu dan ikon suhu */}
+        <div className="d-flex justify-content-center align-items-center mb-1">
           <p
-            className="display-2 d-flex align-items-center fs-1"
+            className="d-flex align-items-center fs-1"
             style={{ color: tempColor, fontFamily: "Montserrat" }}
           >
             {weatherData.main.temp}°C <span className="ms-2">{tempIcon}</span>
           </p>
         </div>
+
+        {/* Menampilkan deskripsi cuaca */}
         <div className="text-center mb-3">
           <p className="fs-4">{weatherData.weather[0].description}</p>
           <img
@@ -86,28 +174,39 @@ const WeatherCard = ({ weatherData }) => {
             }}
           />
         </div>
+
+        {/* Menampilkan informasi kelembapan dengan pop-up */}
         <div className="d-flex justify-content-between">
           <div>
+            <p className="fs-5 mb-1">💨 {weatherData.wind.speed} km/h</p>
             <p className="fs-5 mb-1">
-              <i className="bi bi-wind"></i> 💨 {weatherData.wind.speed} km/h
-            </p>
-            <p className="fs-5 mb-1">
-              <i className="bi bi-droplet"></i> 💧 {weatherData.main.humidity}%
-              <span
-                className="ms-2 text-muted"
-                title={getHumidityDescription(weatherData.main.humidity)}
-              >
-                <img src={info} alt="Info" />
+              💧 {weatherData.main.humidity}%
+              <span className="ms-2 text-muted">
+                <img
+                  src={info}
+                  alt="Info"
+                  onClick={toggleInfo}
+                  style={{ cursor: "pointer", width: "20px", height: "20px" }}
+                />
               </span>
             </p>
           </div>
         </div>
       </div>
+
+      {/* Modal Pop-up */}
+      <Modal show={showInfo} onHide={toggleInfo} size="sm" centered>
+        <Modal.Body className="text-center p-4 bg-white rounded shadow-lg">
+          <h5 className="text-dark fw-semibold">
+            {getHumidityDescription(weatherData.main.humidity)}
+          </h5>
+        </Modal.Body>
+      </Modal>
     </motion.div>
   );
 };
 
-// Tambahkan validasi props
+// validasi props
 WeatherCard.propTypes = {
   weatherData: PropTypes.shape({
     name: PropTypes.string.isRequired,
@@ -121,11 +220,8 @@ WeatherCard.propTypes = {
         icon: PropTypes.string.isRequired,
       })
     ).isRequired,
-    wind: PropTypes.shape({
-      speed: PropTypes.number.isRequired,
-    }).isRequired,
+    wind: PropTypes.shape({ speed: PropTypes.number.isRequired }).isRequired,
     timezone: PropTypes.number.isRequired,
   }).isRequired,
 };
-
 export default WeatherCard;
