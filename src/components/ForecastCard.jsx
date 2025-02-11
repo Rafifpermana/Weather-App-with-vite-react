@@ -10,7 +10,7 @@ const ForecastCard = ({ forecastData }) => {
           <motion.div
             key={day.date}
             className="card m-2 p-3 text-center shadow-sm"
-            style={{ width: "150px", borderRadius: "10px" }}
+            style={{ width: "100%", maxWidth: "150px", borderRadius: "10px" }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}

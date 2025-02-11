@@ -85,12 +85,18 @@ const WeatherCard = ({ weatherData }) => {
 
     const lowerDesc = description.toLowerCase();
 
-    if (stormy.includes(lowerDesc)) return "#4a4a4a";
-    if (rainy.includes(lowerDesc)) return "#4682b4";
-    if (snowy.includes(lowerDesc)) return "#b0e0e6";
-    if (cloudy.includes(lowerDesc)) return "#d3d3d3";
-    if (atmosphere.includes(lowerDesc)) return "#696969";
-    if (lowerDesc === "clear sky") return "#87ceeb";
+    if (stormy.includes(lowerDesc))
+      return "linear-gradient(to right, #4a4a4a, #232526)";
+    if (rainy.includes(lowerDesc))
+      return "linear-gradient(to right, #4682b4, #5f9ea0)";
+    if (snowy.includes(lowerDesc))
+      return "linear-gradient(to right, #b0e0e6, #f0f8ff)";
+    if (cloudy.includes(lowerDesc))
+      return "linear-gradient(to right, #d3d3d3, #a9a9a9)";
+    if (atmosphere.includes(lowerDesc))
+      return "linear-gradient(to right, #696969, #2f4f4f)";
+    if (lowerDesc === "clear sky")
+      return "linear-gradient(to right, #87ceeb, #00bfff)";
 
     return "#f0f0f0";
   };
@@ -102,8 +108,8 @@ const WeatherCard = ({ weatherData }) => {
   };
 
   const getTempIcon = (temp) => {
-    if (temp < 15) return "❄️";
-    if (temp >= 15 && temp <= 25) return "☁️";
+    if (temp < 15) return "❄";
+    if (temp >= 15 && temp <= 25) return "☁";
     return "🔥";
   };
 
@@ -124,8 +130,9 @@ const WeatherCard = ({ weatherData }) => {
     <motion.div
       className="card mx-auto p-4 shadow-lg"
       style={{
-        maxWidth: "420px",
-        backgroundColor: backgroundColor,
+        Width: "100%",
+        maxWidth: "450px",
+        background: backgroundColor,
         borderRadius: "15px",
         color: textColor,
       }}
@@ -224,4 +231,5 @@ WeatherCard.propTypes = {
     timezone: PropTypes.number.isRequired,
   }).isRequired,
 };
+
 export default WeatherCard;
