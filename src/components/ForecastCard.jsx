@@ -1,44 +1,73 @@
 import PropTypes from "prop-types";
 import { motion } from "framer-motion";
+import moment from "moment";
 
 const ForecastCard = ({ forecastData }) => {
+  const getTextColor = (temp) => {
+    if (temp < 15) return "#3498db";
+    if (temp >= 15 && temp <= 25) return "#95a5a6";
+    return "#e74c3c";
+  };
+
+  const getTempIcon = (temp) => {
+    if (temp < 15) return "❄";
+    if (temp >= 15 && temp <= 25) return "☁";
+    return "🔥";
+  };
+
   return (
     <div className="mt-4">
       <h2>5-Day Forecast</h2>
       <div className="d-flex flex-wrap justify-content-center">
-        {forecastData.map((day, index) => (
-          <motion.div
-            key={day.date}
-            className="card m-2 p-3 text-center shadow-sm"
-            style={{ width: "100%", maxWidth: "150px", borderRadius: "10px" }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-          >
-            <h6 className="fw-bold">{day.date}</h6>
-            <img
-              src={`https://openweathermap.org/img/wn/${day.icon}@2x.png`}
-              alt="weather icon"
-              style={{
-                filter: "contrast(1.5) brightness(1.1)",
-              }}
-            />
+        {forecastData.map((day) => {
+          const tempColor = getTextColor(day.avgTemp);
+          const tempIcon = getTempIcon(day.avgTemp);
+          const dayOfWeek = moment(day.date).format("dddd");
 
-            <p className="fs-5 fw-semibold">{day.avgTemp}°C</p>
-          </motion.div>
-        ))}
+          return (
+            <motion.div
+              key={day.date}
+              className="card m-2 p-3 text-center shadow-sm"
+              style={{
+                width: "100%",
+                maxWidth: "150px",
+                borderRadius: "10px",
+                background: "#f8f8f8",
+                color: "#333",
+              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h6 className="fw-bold">{dayOfWeek}</h6>
+              <img
+                src={`https://openweathermap.org/img/wn/${day.icon}@4x.png`}
+                alt="weather icon"
+                style={{ filter: "contrast(2.1) brightness(1.1)" }}
+              />
+
+              <p
+                className="fs-5 fw-semibold"
+                style={{ color: tempColor, fontFamily: "Montserrat" }}
+              >
+                {day.avgTemp}°C <span className="ms-2">{tempIcon}</span>
+              </p>
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );
 };
 
-// Tambahkan validasi props
+// Validasi tipe data props
 ForecastCard.propTypes = {
   forecastData: PropTypes.arrayOf(
     PropTypes.shape({
       date: PropTypes.string.isRequired,
-      avgTemp: PropTypes.string.isRequired,
+      avgTemp: PropTypes.number.isRequired,
       icon: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
     })
   ).isRequired,
 };
