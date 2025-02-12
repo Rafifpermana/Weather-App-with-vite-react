@@ -1,13 +1,10 @@
 import { useState } from "react";
 import WeatherCard from "./components/WeatherCard";
 import ForecastCard from "./components/ForecastCard";
+import SearchBar from "./common/SearchBar";
 import { processForecastData } from "./utils/weatherUtils";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import "./style/SearchBar.css";
 
 function App() {
-  const [city, setCity] = useState("");
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -15,7 +12,7 @@ function App() {
 
   const API_KEY = import.meta.env.VITE_OPEN_WEATHER_MAP_KEY;
 
-  const fetchWeather = async () => {
+  const fetchWeather = async (city) => {
     if (!city) return;
 
     setLoading(true);
@@ -51,32 +48,7 @@ function App() {
       <h1 className="mb-4">Weather App</h1>
 
       {/* Search Bar */}
-      <div className="d-flex justify-content-center mt-4 mb-4">
-        <div className="input-group shadow-sm rounded-pill w-50 w-md-75 w-lg-50">
-          {/* Ikon Search */}
-          <span className="input-group-text bg-white border-0 ps-4">
-            <i className="bi bi-search text-secondary"></i>
-          </span>
-
-          {/* Input Field */}
-          <input
-            type="text"
-            className="form-control border-0 shadow-none fs-6"
-            placeholder="Search anything..."
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          />
-
-          {/* Tombol Search */}
-          <button
-            className="btn btn-primary rounded-pill px-lg-4 px-md-3 px-2"
-            onClick={fetchWeather}
-            disabled={loading}
-          >
-            {loading ? "Loading..." : "Search"}
-          </button>
-        </div>
-      </div>
+      <SearchBar onSearch={fetchWeather} loading={loading} />
 
       {/* Error Message */}
       {error && <div className="alert alert-danger">{error}</div>}

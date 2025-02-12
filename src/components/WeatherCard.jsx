@@ -1,18 +1,12 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
 import info from "../assets/information-line.png";
 import { getHumidityDescription } from "../utils/weatherUtils";
 import { motion } from "framer-motion";
 import moment from "moment-timezone";
-import { Modal } from "react-bootstrap";
+import { OverlayTrigger, Tooltip, Popover } from "react-bootstrap";
+import useDeviceType from "../hooks/useDeviceType";
 
 const WeatherCard = ({ weatherData }) => {
-  const [showInfo, setShowInfo] = useState(false);
-
-  const toggleInfo = () => {
-    setShowInfo(!showInfo);
-  };
-
   const getBackgroundColor = (description) => {
     const stormy = [
       "thunderstorm with light rain",
@@ -26,7 +20,6 @@ const WeatherCard = ({ weatherData }) => {
       "thunderstorm with drizzle",
       "thunderstorm with heavy drizzle",
     ];
-
     const rainy = [
       "light rain",
       "moderate rain",
@@ -48,7 +41,6 @@ const WeatherCard = ({ weatherData }) => {
       "heavy shower rain and drizzle",
       "shower drizzle",
     ];
-
     const snowy = [
       "light snow",
       "snow",
@@ -62,14 +54,12 @@ const WeatherCard = ({ weatherData }) => {
       "shower snow",
       "heavy shower snow",
     ];
-
     const cloudy = [
       "overcast clouds",
       "broken clouds",
       "scattered clouds",
       "few clouds",
     ];
-
     const atmosphere = [
       "mist",
       "smoke",
@@ -84,7 +74,6 @@ const WeatherCard = ({ weatherData }) => {
     ];
 
     const lowerDesc = description.toLowerCase();
-
     if (stormy.includes(lowerDesc))
       return "linear-gradient(to right, #4a4a4a, #232526)";
     if (rainy.includes(lowerDesc))
@@ -97,7 +86,6 @@ const WeatherCard = ({ weatherData }) => {
       return "linear-gradient(to right, #696969, #2f4f4f)";
     if (lowerDesc === "clear sky")
       return "linear-gradient(to right, #87ceeb, #00bfff)";
-
     return "#f0f0f0";
   };
 
@@ -125,6 +113,23 @@ const WeatherCard = ({ weatherData }) => {
   const dayOfWeek = moment()
     .utcOffset(weatherData.timezone / 60)
     .format("dddd");
+
+  const deviceType = useDeviceType();
+
+  const renderOverlay = (props) => {
+    if (deviceType === "mobile") {
+      return (
+        <Popover id="popover-basic" {...props}>
+          {getHumidityDescription(weatherData.main.humidity)}
+        </Popover>
+      );
+    }
+    return (
+      <Tooltip id="tooltip-basic" {...props}>
+        {getHumidityDescription(weatherData.main.humidity)}
+      </Tooltip>
+    );
+  };
 
   return (
     <motion.div
@@ -188,27 +193,24 @@ const WeatherCard = ({ weatherData }) => {
             <p className="fs-5 mb-1">💨 {weatherData.wind.speed} km/h</p>
             <p className="fs-5 mb-1">
               💧 {weatherData.main.humidity}%
-              <span className="ms-2 text-muted">
+              <OverlayTrigger placement="top" overlay={renderOverlay}>
                 <img
                   src={info}
                   alt="Info"
-                  onClick={toggleInfo}
-                  style={{ cursor: "pointer", width: "20px", height: "20px" }}
+                  style={{
+                    cursor: "pointer",
+                    width: "25px",
+                    height: "25px",
+                    marginLeft: "10px",
+                    verticalAlign: "middle",
+                    marginTop: "-5px",
+                  }}
                 />
-              </span>
+              </OverlayTrigger>
             </p>
           </div>
         </div>
       </div>
-
-      {/* Modal Pop-up */}
-      <Modal show={showInfo} onHide={toggleInfo} size="sm" centered>
-        <Modal.Body className="text-center p-4 bg-white rounded shadow-lg">
-          <h5 className="text-dark fw-semibold">
-            {getHumidityDescription(weatherData.main.humidity)}
-          </h5>
-        </Modal.Body>
-      </Modal>
     </motion.div>
   );
 };

@@ -4,6 +4,14 @@ import App from "./App";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <div
+      style={{
+        backgroundColor: "#ecf0f1",
+        minHeight: "100vh",
+        padding: "20px",
+      }}
+    >
+      <App />
+    </div>
   </React.StrictMode>
 );
