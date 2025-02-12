@@ -32,7 +32,7 @@ const ForecastCard = ({ forecastData }) => {
                 width: "100%",
                 maxWidth: "150px",
                 borderRadius: "10px",
-                background: "#f8f8f8",
+                background: "#f5f5f5",
                 color: "#333",
               }}
               initial={{ opacity: 0, y: 20 }}
