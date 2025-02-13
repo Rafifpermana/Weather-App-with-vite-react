@@ -49,7 +49,6 @@ const LinkBar = () => {
         className="text-decoration-none"
         href={githubUrl}
         target="_blank"
-        rel="noopener noreferrer"
         style={{
           margin: "0 10px",
           display: "flex",
