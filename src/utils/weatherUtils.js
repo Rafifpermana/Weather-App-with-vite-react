@@ -14,6 +14,7 @@ export const processForecastData = (forecastData) => {
         tempSum: 0,
         count: 0,
         icon: entry.weather[0].icon,
+        description: entry.weather[0].description || "No description",
       };
     }
     dailyForecast[date].tempSum += entry.main.temp;
@@ -25,11 +26,13 @@ export const processForecastData = (forecastData) => {
 
   return Object.keys(dailyForecast)
     .filter((date) => date !== today) // Hapus data hari ini
+    .slice(0, 5)
     .map((date) => ({
       date,
       avgTemp: (
         dailyForecast[date].tempSum / dailyForecast[date].count
       ).toFixed(1),
       icon: dailyForecast[date].icon,
+      description: dailyForecast[date].description || "No description",
     }));
 };

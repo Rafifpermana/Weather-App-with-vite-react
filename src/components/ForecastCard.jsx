@@ -49,6 +49,8 @@ const ForecastCard = ({ forecastData }) => {
                 style={{ filter: "contrast(2.1) brightness(1.1)" }}
               />
 
+              <p className="fw-semibold small">{day.description}</p>
+
               {/* Menampilkan suhu rata-rata dengan warna sesuai kondisi suhu */}
               <p
                 className="fs-5 fw-semibold"
