@@ -20,11 +20,16 @@ export const processForecastData = (forecastData) => {
     dailyForecast[date].count += 1;
   });
 
-  return Object.keys(dailyForecast).map((date) => ({
-    date,
-    avgTemp: (dailyForecast[date].tempSum / dailyForecast[date].count).toFixed(
-      1
-    ),
-    icon: dailyForecast[date].icon,
-  }));
+  // Ambil tanggal hari ini
+  const today = new Date().toISOString().split("T")[0];
+
+  return Object.keys(dailyForecast)
+    .filter((date) => date !== today) // Hapus data hari ini
+    .map((date) => ({
+      date,
+      avgTemp: (
+        dailyForecast[date].tempSum / dailyForecast[date].count
+      ).toFixed(1),
+      icon: dailyForecast[date].icon,
+    }));
 };
