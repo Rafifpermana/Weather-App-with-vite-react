@@ -27,7 +27,7 @@ const LinkBar = () => {
     };
   }, []);
 
-  const githubUrl = import.meta.env.VITE_APP_GITHUB_URL;
+  //   const githubUrl = import.meta.env.VITE_APP_GITHUB_URL;
   const email = import.meta.env.VITE_APP_EMAIL;
   const whatsappNumber = import.meta.env.VITE_APP_WHATSAPP_NUMBER;
 
@@ -47,8 +47,9 @@ const LinkBar = () => {
     >
       <a
         className="text-decoration-none"
-        href={githubUrl}
+        href="https://github.com/Rafifpermana"
         target="_blank"
+        rel="noopener noreferrer"
         style={{
           margin: "0 10px",
           display: "flex",
