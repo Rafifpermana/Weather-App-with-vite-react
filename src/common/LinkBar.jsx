@@ -30,6 +30,51 @@ const LinkBar = () => {
   const email = import.meta.env.VITE_APP_EMAIL;
   const whatsappNumber = import.meta.env.VITE_APP_WHATSAPP_NUMBER;
 
+  // Fungsi untuk membuka WhatsApp
+  const openWhatsApp = () => {
+    const url = `https://wa.me/${whatsappNumber}`;
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+
+    if (isMobile) {
+      //  buka aplikasi WhatsApp di mobile
+      window.location.href = url;
+    } else {
+      // Untuk desktop, buka WhatsApp di browser
+      window.open(url, "_blank");
+    }
+  };
+
+  // Fungsi untuk membuka Email
+  const openEmail = () => {
+    const mailtoLink = `mailto:${email}?subject=Hello&body=Hi, I found your contact from your website.`;
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+
+    if (isMobile) {
+      //  buka aplikasi email default di mobile
+      window.location.href = mailtoLink;
+
+      // Fallback jika email tidak terbuka setelah 1 detik
+      setTimeout(() => {
+        const confirmed = window.confirm(
+          "Aplikasi email tidak ditemukan. Apakah Anda ingin menyalin alamat email?"
+        );
+        if (confirmed) {
+          navigator.clipboard.writeText(email);
+          alert("Alamat email telah disalin: " + email);
+        }
+      }, 1000);
+    } else {
+      // Untuk desktop, buka aplikasi email default
+      window.open(mailtoLink, "_blank");
+    }
+  };
+
   return (
     <div
       style={{
@@ -63,14 +108,16 @@ const LinkBar = () => {
         />
         <span className="d-none d-md-inline"> Rafifpermana</span>
       </a>
-      <a
-        className="text-decoration-none"
-        href={`mailto:${email}?subject=Hello&body=Hi, I found your contact from your website.`}
+
+      {/* Link Email */}
+      <div
+        onClick={openEmail}
         style={{
           margin: "0 10px",
           display: "flex",
           alignItems: "center",
           color: "#000",
+          cursor: "pointer",
         }}
       >
         <img
@@ -79,17 +126,17 @@ const LinkBar = () => {
           style={{ width: "25px", height: "25px", marginRight: "8px" }}
         />
         <span className="d-none d-md-inline"> Email</span>
-      </a>
-      <a
-        className="text-decoration-none"
-        href={`https://wa.me/${whatsappNumber}`}
-        target="_blank"
-        rel="noopener noreferrer"
+      </div>
+
+      {/* Link WhatsApp */}
+      <div
+        onClick={openWhatsApp}
         style={{
           margin: "0 10px",
           display: "flex",
           alignItems: "center",
           color: "#25D366",
+          cursor: "pointer",
         }}
       >
         <img
@@ -98,7 +145,7 @@ const LinkBar = () => {
           style={{ width: "25px", height: "25px", marginRight: "8px" }}
         />
         <span className="d-none d-md-inline"> WhatsApp</span>
-      </a>
+      </div>
     </div>
   );
 };
