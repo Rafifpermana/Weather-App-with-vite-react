@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { isMobile } from "react-device-detect"; // Menggunakan react-device-detect
 import gmail from "../assets/gmail.png";
 import github from "../assets/github.png";
 import watsapp from "../assets/whatsapp.png";
@@ -33,13 +34,9 @@ const LinkBar = () => {
   // Fungsi untuk membuka WhatsApp
   const openWhatsApp = () => {
     const url = `https://wa.me/${whatsappNumber}`;
-    const isMobile =
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      );
 
     if (isMobile) {
-      //  buka aplikasi WhatsApp di mobile
+      // Buka aplikasi WhatsApp di mobile
       window.location.href = url;
     } else {
       // Untuk desktop, buka WhatsApp di browser
@@ -50,13 +47,9 @@ const LinkBar = () => {
   // Fungsi untuk membuka Email
   const openEmail = () => {
     const mailtoLink = `mailto:${email}?subject=Hello&body=Hi, I found your contact from your website.`;
-    const isMobile =
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      );
 
     if (isMobile) {
-      //  buka aplikasi email default di mobile
+      // Buka aplikasi email default di mobile
       window.location.href = mailtoLink;
 
       // Fallback jika email tidak terbuka setelah 1 detik
@@ -89,6 +82,7 @@ const LinkBar = () => {
         transition: "opacity 0.3s ease-in-out",
       }}
     >
+      {/* Link GitHub */}
       <a
         className="text-decoration-none"
         href="https://github.com/Rafifpermana"
