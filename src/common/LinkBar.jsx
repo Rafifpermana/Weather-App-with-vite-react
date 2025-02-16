@@ -28,8 +28,9 @@ const LinkBar = () => {
     };
   }, []);
 
-  const email = import.meta.env.VITE_APP_EMAIL;
-  const whatsappNumber = import.meta.env.VITE_APP_WHATSAPP_NUMBER;
+  // Nilai dari .env dimasukkan langsung ke dalam kode
+  const email = "rafifpermana39@gmail.com";
+  const whatsappNumber = "6285843966439";
 
   // Fungsi untuk membuka WhatsApp
   const openWhatsApp = () => {
